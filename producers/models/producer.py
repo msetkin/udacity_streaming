@@ -96,9 +96,9 @@ class Producer:
             for topic, future in futures.items():
                 try:
                     future.result()
-                    logger.info(f"topic {topic_name} has been successfully created")
+                    logger.info(f"topic {self.topic_name} has been successfully created")
                 except Exception as e:
-                    logger.error(f"failed to create topic {topic_name}: {e}")
+                    logger.error(f"failed to create topic {self.topic_name}: {e}")
                     raise
  
 
