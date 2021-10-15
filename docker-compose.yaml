@@ -33,6 +33,7 @@ services:
 
   schema-registry:
     image: confluentinc/cp-schema-registry:5.2.2
+    restart: always
     ports:
     - "8081:8081"
     environment:
