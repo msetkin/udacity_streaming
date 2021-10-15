@@ -8,10 +8,9 @@ from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroProducer, CachedSchemaRegistryClient
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.DEBUG)
+handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -110,7 +109,7 @@ class Producer:
         #
         #
         if self.producer.flush() == 0:
-            logger.info("producer closed successfully")
+            logger.debug("producer closed successfully")
         else:
             logger.info("producer close incomplete - skipping")
 
