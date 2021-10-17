@@ -42,7 +42,7 @@ class Weather(Producer):
         # replicas
         #
         super().__init__(
-            topic_name = "com.streaming.weather",
+            topic_name = "com.streaming.restproxy.weather",
             key_schema = Weather.key_schema,
             value_schema = Weather.value_schema,
             num_partitions = 3,
