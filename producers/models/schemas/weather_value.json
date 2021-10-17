@@ -5,10 +5,7 @@
   "fields": [
     {
       "name": "temperature",
-      "type": ["null", "bytes"],
-      "logicalType": "decimal", 
-      "precision": 1, 
-      "scale": 3,
+      "type": ["null", "float"],
       "default": null
     },
     {
