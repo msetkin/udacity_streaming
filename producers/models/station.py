@@ -39,12 +39,12 @@ class Station(Producer):
         # replicas
         #
         
-        topic_name = f"{station_name}" # TODO: Come up with a better topic name
+        topic_name = f"com.streaming.station.{color}.{station_id}" # TODO: Come up with a better topic name
         super().__init__(
             topic_name,
             key_schema = Station.key_schema,
             value_schema = Station.value_schema,
-            num_partitions=1,
+            num_partitions=3,
             num_replicas=1,
         )
 
