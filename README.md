@@ -28,8 +28,8 @@ The first step in our plan is to configure the train stations to emit some of th
 
 To accomplish this, you must complete the following tasks:
 
-1. Complete the code in `producers/models/producer.py`
-1. Define a `value` schema for the arrival event in `producers/models/schemas/arrival_value.json` with the following attributes
++1. Complete the code in `producers/models/producer.py`
++1. Define a `value` schema for the arrival event in `producers/models/schemas/arrival_value.json` with the following attributes
 	* `station_id`
 	* `train_id`
 	* `direction`
@@ -37,15 +37,15 @@ To accomplish this, you must complete the following tasks:
 	* `train_status`
 	* `prev_station_id`
 	* `prev_direction`
-1. Complete the code in `producers/models/station.py` so that:
++1. Complete the code in `producers/models/station.py` so that:
 	* A topic is created for each station in Kafka to track the arrival events
 	* The station emits an `arrival` event to Kafka whenever the `Station.run()` function is called.
 	* Ensure that events emitted to kafka are paired with the Avro `key` and `value` schemas
-1. Define a `value` schema for the turnstile event in `producers/models/schemas/turnstile_value.json` with the following attributes
++1. Define a `value` schema for the turnstile event in `producers/models/schemas/turnstile_value.json` with the following attributes
 	* `station_id`
 	* `station_name`
 	* `line`
-1. Complete the code in `producers/models/turnstile.py` so that:
++1. Complete the code in `producers/models/turnstile.py` so that:
 	* A topic is created for each turnstile for each station in Kafka to track the turnstile events
 	* The station emits a `turnstile` event to Kafka whenever the `Turnstile.run()` function is called.
 	* Ensure that events emitted to kafka are paired with the Avro `key` and `value` schemas
@@ -55,10 +55,10 @@ Our partners at the CTA have asked that we also send weather readings into Kafka
 
 To accomplish this, you must complete the following tasks:
 
-1. Define a `value` schema for the weather event in `producers/models/schemas/weather_value.json` with the following attributes
++1. Define a `value` schema for the weather event in `producers/models/schemas/weather_value.json` with the following attributes
 	* `temperature`
 	* `status`
-1. Complete the code in `producers/models/weather.py` so that:
++1. Complete the code in `producers/models/weather.py` so that:
 	* A topic is created for weather events
 	* The weather model emits `weather` event to Kafka REST Proxy whenever the `Weather.run()` function is called.
 		* **NOTE**: When sending HTTP requests to Kafka REST Proxy, be careful to include the correct `Content-Type`. Pay close attention to the [examples in the documentation](https://docs.confluent.io/current/kafka-rest/api.html#post--topics-(string-topic_name)) for more information.
@@ -69,7 +69,7 @@ Finally, we need to extract station information from our PostgreSQL database int
 
 To accomplish this, you must complete the following tasks:
 
-1. Complete the code and configuration in `producers/connectors.py`
++1. Complete the code and configuration in `producers/connectors.py`
 	* Please refer to the [Kafka Connect JDBC Source Connector Configuration Options](https://docs.confluent.io/current/connect/kafka-connect-jdbc/source-connector/source_config_options.html) for documentation on the options you must complete.
 	* You can run this file directly to test your connector, rather than running the entire simulation.
 	* Make sure to use the [Landoop Kafka Connect UI](http://localhost:8084) and [Landoop Kafka Topics UI](http://localhost:8085) to check the status and output of the Connector.
@@ -80,7 +80,7 @@ We will leverage Faust Stream Processing to transform the raw Stations table tha
 
 To accomplish this, you must complete the following tasks:
 
-1. Complete the code and configuration in `consumers/faust_stream.py
++1. Complete the code and configuration in `consumers/faust_stream.py
 
 #### Watch Out!
 
@@ -93,7 +93,7 @@ Next, we will use KSQL to aggregate turnstile data for each of our stations. Rec
 
 To accomplish this, you must complete the following tasks:
 
-1. Complete the queries in `consumers/ksql.py`
++1. Complete the queries in `consumers/ksql.py`
 
 #### Tips
 
@@ -107,10 +107,10 @@ With all of the data in Kafka, our final task is to consume the data in the web 
 
 To accomplish this, you must complete the following tasks:
 
-1. Complete the code in `consumers/consumer.py`
-1. Complete the code in `consumers/models/line.py`
-1. Complete the code in `consumers/models/weather.py`
-1. Complete the code in `consumers/models/station.py`
++1. Complete the code in `consumers/consumer.py`
++1. Complete the code in `consumers/models/line.py`
++1. Complete the code in `consumers/models/weather.py`
++1. Complete the code in `consumers/models/station.py`
 
 ### Documentation
 In addition to the course content you have already reviewed, you may find the following examples and documentation helpful in completing this assignment:
@@ -231,3 +231,17 @@ Once the simulation is running, you may hit `Ctrl+C` at any time to exit.
 5. `python server.py`
 
 Once the server is running, you may hit `Ctrl+C` at any time to exit.
+run once:
+(python consumers/ksql.py &)&
+
+
+P.S. Do not forget to run for simulation:
+
+export PYTHONPATH=/home/mikhail/udacity-streaming/udacity-streaming
+export PG_PASSWORD=%PASSWORD%
+
+(python producers/simulation.py &)&
+(faust -A faust_stream -W /home/mikhail/udacity-streaming/udacity-streaming/consumers worker -l info &)&
+(python consumers/server.py &)&
+
+
