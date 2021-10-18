@@ -3,9 +3,10 @@ import json
 import logging
 
 from models import Station
-
+from ksql import TURNSTILE_SUMMARY_TABLE
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class Line:
@@ -56,23 +57,28 @@ class Line:
 
     def process_message(self, message):
         """Given a kafka message, extract data"""
-        # TODO: Based on the message topic, call the appropriate handler.
-        if True: # Set the conditional correctly to the stations Faust Table
+        
+        message_topic = message.topic()
+        
+        if message_topic == "org.chicago.cta.stations.table.v1": # Set the conditional correctly to the stations Faust Table
             try:
                 value = json.loads(message.value())
                 self._handle_station(value)
             except Exception as e:
                 logger.fatal("bad station? %s, %s", value, e)
-        elif True: # Set the conditional to the arrival topic
+        
+        elif message_topic == "com.streaming.produce.station": # Set the conditional to the arrival topic
             self._handle_arrival(message)
-        elif True: # Set the conditional to the KSQL Turnstile Summary Topic
+        
+        elif message_topic == TURNSTILE_SUMMARY_TABLE: # Set the conditional to the KSQL Turnstile Summary Topic
             json_data = json.loads(message.value())
             station_id = json_data.get("STATION_ID")
             station = self.stations.get(station_id)
             if station is None:
-                logger.debug("unable to handle message due to missing station")
+                logger.error("unable to handle message due to missing station")
                 return
             station.process_message(json_data)
+        
         else:
             logger.debug(
                 "unable to find handler for message from topic %s", message.topic
