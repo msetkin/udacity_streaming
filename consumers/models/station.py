@@ -4,6 +4,7 @@ import logging
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class Station:
@@ -40,4 +41,5 @@ class Station:
 
     def process_message(self, json_data):
         """Handles arrival and turnstile messages"""
-        self.num_turnstile_entries = json_data["COUNT"]
+        self.num_turnstile_entries = json_data["CNT_ENTRIES"]
+        #logger.info (f"num_turnstile_entries: {self.num_turnstile_entries}, json_data: {json_data}")
