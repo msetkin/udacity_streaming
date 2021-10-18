@@ -26,8 +26,10 @@ class Turnstile(Producer):
             .replace("-", "_")
             .replace("'", "")
         )
+        
         #self.station_id = station.station_id
         #self.line = station.color
+        
         self.station = station
         self.turnstile_hardware = TurnstileHardware(station)
 
@@ -64,14 +66,16 @@ class Turnstile(Producer):
         }
         
         message_value = {
-            "line":self.station.color.name,
-            "station_id":self.station.station_id,
-            "station_name":self.station_name,
-            "num_entries":num_entries
+            "line": self.station.color.name,
+            "station_id": self.station.station_id,
+            "station_name": self.station_name,
+            "num_entries": num_entries
         }
+
+        logger.debug (f"produced turnstile {message_value} into topic {self.topic_name}")
         
         self.producer.produce(
-            topic=self.topic_name,
+            topic = self.topic_name,
             key = message_key,
             value = message_value,
             key_schema = self.key_schema,
