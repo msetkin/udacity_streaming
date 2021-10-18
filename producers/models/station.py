@@ -9,6 +9,7 @@ from producers.models.producer import Producer
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class Station(Producer):
@@ -55,7 +56,6 @@ class Station(Producer):
         self.a_train = None
         self.b_train = None
         self.turnstile = Turnstile(self)
-
 
     def run(self, train, direction, prev_station_id, prev_direction):
         """Simulates train arrivals at this station"""
