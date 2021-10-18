@@ -15,12 +15,9 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-
 BROKER_URL = "PLAINTEXT://localhost:9092"
 SCHEMA_REGISTRY_URL = "http://localhost:8081"
 GROUP_ID = "UDACITY_STREAMING_NANODEGREE"
-
-
 
 class Producer:
     """Defines and provides common functionality amongst Producers"""
@@ -63,6 +60,7 @@ class Producer:
             config = self.broker_properties,
             schema_registry = self.schema_registry
         )
+
 
     def topic_exists(self):
         """Checks if the given topic exists"""
