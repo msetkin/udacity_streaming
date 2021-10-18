@@ -14,6 +14,7 @@ logging.config.fileConfig(f"{Path(__file__).parents[0]}/logging.ini")
 
 from consumer import KafkaConsumer
 from models import Lines, Weather
+from ksql import TURNSTILE_SUMMARY_TABLE
 import topic_check
 
 
@@ -41,7 +42,8 @@ class MainHandler(tornado.web.RequestHandler):
 
 def run_server():
     """Runs the Tornado Server and begins Kafka consumption"""
-    if topic_check.topic_exists("TURNSTILE_SUMMARY") is False:
+    logger.debug (f"look-up for topic {TURNSTILE_SUMMARY_TABLE}")
+    if topic_check.topic_exists(TURNSTILE_SUMMARY_TABLE) is False:
         logger.fatal(
             "Ensure that the KSQL Command has run successfully before running the web server!"
         )
@@ -63,7 +65,7 @@ def run_server():
     # Build kafka consumers
     consumers = [
         KafkaConsumer(
-            "org.chicago.cta.weather.v1",
+            "com.streaming.restproxy.weather",
             weather_model.process_message,
             offset_earliest=True,
         ),
@@ -71,15 +73,15 @@ def run_server():
             "org.chicago.cta.stations.table.v1",
             lines.process_message,
             offset_earliest=True,
-            is_avro=False,
+            is_avro=False
         ),
         KafkaConsumer(
-            "^org.chicago.cta.station.arrivals.",
+            "com.streaming.produce.station",
             lines.process_message,
             offset_earliest=True,
         ),
         KafkaConsumer(
-            "TURNSTILE_SUMMARY",
+            TURNSTILE_SUMMARY_TABLE,
             lines.process_message,
             offset_earliest=True,
             is_avro=False,
@@ -87,9 +89,10 @@ def run_server():
     ]
 
     try:
-        logger.info(
-            "Open a web browser to http://localhost:8888 to see the Transit Status Page"
-        )
+        logger.info("==========================================================================================")
+        logger.info("=     Open a web browser to http://localhost:8888 to see the Transit Status Page         =")
+        logger.info("==========================================================================================")
+        
         for consumer in consumers:
             tornado.ioloop.IOLoop.current().spawn_callback(consumer.consume)
 
