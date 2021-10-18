@@ -11,7 +11,7 @@ import urllib.parse
 
 import requests
 
-from models.producer import Producer
+from producers.models.producer import Producer
 
 
 logger = logging.getLogger(__name__)
