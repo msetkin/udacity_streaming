@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 
 
 KSQL_URL = "http://localhost:8088"
+TURNSTILE_SUMMARY_TABLE = "com_streaming_ksql_turnstile_summary_table"
 
 #
 # Next, we will use KSQL to aggregate turnstile data for each of our stations.
@@ -28,7 +29,7 @@ KSQL_URL = "http://localhost:8088"
 #       Make sure to cast the COUNT of station id to `count`
 #       Make sure to set the value format to JSON
 
-KSQL_STATEMENT = """
+KSQL_STATEMENT = f"""
 CREATE STREAM com_streaming_ksql_turnstile_stream (
     line VARCHAR,
     station_id INT,
@@ -50,7 +51,7 @@ CREATE TABLE com_streaming_ksql_turnstile_table (
     KEY = 'station_id'
 );
 
-CREATE TABLE com_streaming_ksql_turnstile_summary_table
+CREATE TABLE {TURNSTILE_SUMMARY_TABLE}
 WITH (
     VALUE_FORMAT = 'JSON'
 )
@@ -65,8 +66,8 @@ AS
 
 def execute_statement():
     """Executes the KSQL statement against the KSQL API"""
-    if topic_check.topic_exists("TURNSTILE_SUMMARY") is True:
-        logging.info(f"topic {TURNSTILE_SUMMARY} already exists. Executing ksql statement...")
+    if topic_check.topic_exists(TURNSTILE_SUMMARY_TABLE) is True:
+        logging.info(f"topic {TURNSTILE_SUMMARY_TABLE} already exists. Terminating KSQL statement...")
         return
 
     logging.debug("executing ksql statement...")
