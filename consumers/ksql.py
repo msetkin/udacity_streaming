@@ -33,8 +33,7 @@ KSQL_STATEMENT = f"""
 CREATE STREAM COM_STREAMING_KSQL_TURNSTILE_STREAM (
     line VARCHAR,
     station_id INT,
-    station_name VARCHAR,
-    num_entries INT
+    station_name VARCHAR
 ) WITH (
     KAFKA_TOPIC = 'com.streaming.produce.turnstile',
     VALUE_FORMAT = 'Avro'
@@ -43,8 +42,7 @@ CREATE STREAM COM_STREAMING_KSQL_TURNSTILE_STREAM (
 CREATE TABLE COM_STREAMING_KSQL_TURNSTILE_TABLE (
     line VARCHAR,
     station_id INT,
-    station_name VARCHAR,
-    num_entries INT
+    station_name VARCHAR
 ) WITH (
     KAFKA_TOPIC = 'com.streaming.produce.turnstile',
     VALUE_FORMAT = 'Avro',
@@ -57,8 +55,8 @@ WITH (
 )
 AS
     SELECT station_id,
-           sum (num_entries) as sum_num_entries,
-           count (1) as cnt_entries
+           count (1) as cnt_entries,
+           COLLECT_SET (line) as line_color
       FROM com_streaming_ksql_turnstile_stream
     WINDOW HOPPING (SIZE 10 MINUTES, ADVANCE BY 1 MINUTE)
      GROUP BY station_id;

@@ -27,9 +27,6 @@ class Turnstile(Producer):
             .replace("'", "")
         )
         
-        #self.station_id = station.station_id
-        #self.line = station.color
-        
         self.station = station
         self.turnstile_hardware = TurnstileHardware(station)
 
@@ -61,26 +58,27 @@ class Turnstile(Producer):
         # of entries that were calculated
         #
 
-        message_key = {
-            "timestamp": self.time_millis()
-        }
-        
-        message_value = {
-            "line": self.station.color.name,
-            "station_id": self.station.station_id,
-            "station_name": self.station_name,
-            "num_entries": num_entries
-        }
+        for _ in range (num_entries):
 
-        logger.debug (f"produced turnstile {message_value} into topic {self.topic_name}")
+            message_key = {
+                "timestamp": self.time_millis()
+            }
+            
+            message_value = {
+                "line": self.station.color.name,
+                "station_id": self.station.station_id,
+                "station_name": self.station_name
+            }
+
+            logger.debug (f"produced turnstile {message_value} into topic {self.topic_name}")
         
-        self.producer.produce(
-            topic = self.topic_name,
-            key = message_key,
-            value = message_value,
-            key_schema = self.key_schema,
-            value_schema = self.value_schema
-        )
+            self.producer.produce(
+                topic = self.topic_name,
+                key = message_key,
+                value = message_value,
+                key_schema = self.key_schema,
+                value_schema = self.value_schema
+            )
         
-        logger.debug(f"object produced to topic \"{self.topic_name}\": {message_key}:{message_value}")
+            logger.debug(f"object produced to topic \"{self.topic_name}\": {message_key}:{message_value}")
 

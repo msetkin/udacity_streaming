@@ -17,11 +17,6 @@
       "name": "station_name",
       "type": ["null", "string"],
       "default": null
-    },
-    {
-      "name": "num_entries",
-      "type": ["null", "int"],
-      "default": null
     }
   ]
 }
