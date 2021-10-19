@@ -10,8 +10,11 @@
     },
     {
       "name": "status",
-      "type": ["null", "string"],
-      "default": null
+      "type": {
+        "type": "enum",
+	      "name": "weather_status",
+	      "symbols": ["sunny", "partly_cloudy", "cloudy", "windy", "precipitation"]
+      }
     }
   ]
 

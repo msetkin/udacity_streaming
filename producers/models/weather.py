@@ -82,13 +82,14 @@ class Weather(Producer):
                         'temperature': {
                             'float': self.temp
                         },
-                        'status': {
-                            'string': self.status.name
-                        }
+                        'status':  self.status.name
+                        
                     }
                 }
             ]
         }
+    
+
         
         resp = requests.post(
             f"{Weather.REST_PROXY_URL}/topics/{self.topic_name}",  
