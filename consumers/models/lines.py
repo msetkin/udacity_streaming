@@ -37,9 +37,22 @@ class Lines:
         
         elif message.topic() == TURNSTILE_SUMMARY_TABLE:
             logger.debug(f"message.topic {message.topic()}, message.value {message.value()}")
-            self.green_line.process_message(message)
-            self.red_line.process_message(message)
-            self.blue_line.process_message(message)
+            try:
+                json_data = json.loads(message.value())
+            except ValueError:  # includes simplejson.decoder.JSONDecodeError
+                logger.error(f"Decoding JSON has failed")
+            
+            line_color = json_data.get("LINE_COLOR")[0]
+            logger.debug(f"line_color: {line_color}")
+
+            if line_color == "red":
+                self.red_line.process_message(message)
+            elif line_color == "green":
+                self.green_line.process_message(message)
+            elif line_color == "blue":
+                self.blue_line.process_message(message)
+            else:
+                logger.error(f"unknown color: {line_color}")
         
         else:
             logger.info("ignoring non-lines message %s", message.topic())
