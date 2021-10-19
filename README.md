@@ -243,5 +243,6 @@ export PG_PASSWORD=%PASSWORD%
 (python producers/simulation.py &)&
 (faust -A faust_stream -W /home/mikhail/udacity-streaming/udacity-streaming/consumers worker -l info &)&
 (python consumers/server.py &)&
+(python run_pg_simulation.py &)&
 
 
